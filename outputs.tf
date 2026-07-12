@@ -1,3 +1,7 @@
+output "spring_cloud_app_mysql_associations_id" {
+  description = "Map of id values across all spring_cloud_app_mysql_associations, keyed the same as var.spring_cloud_app_mysql_associations"
+  value       = { for k, v in azurerm_spring_cloud_app_mysql_association.spring_cloud_app_mysql_associations : k => v.id }
+}
 output "spring_cloud_app_mysql_associations_database_name" {
   description = "Map of database_name values across all spring_cloud_app_mysql_associations, keyed the same as var.spring_cloud_app_mysql_associations"
   value       = { for k, v in azurerm_spring_cloud_app_mysql_association.spring_cloud_app_mysql_associations : k => v.database_name }
