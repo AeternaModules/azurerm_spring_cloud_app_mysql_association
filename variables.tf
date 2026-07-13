@@ -6,8 +6,8 @@ Required:
     - mysql_server_id
     - name
     - password
-    - password_key_vault_id (alternative to password - read from Key Vault instead)
-    - password_key_vault_secret_name (alternative to password - read from Key Vault instead)
+    - password_key_vault_id (optional, alternative to password)
+    - password_key_vault_secret_name (optional, alternative to password)
     - spring_cloud_app_id
     - username
 EOT
@@ -22,30 +22,6 @@ EOT
     spring_cloud_app_id            = string
     username                       = string
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_app_mysql_associations : (
-        length(v.database_name) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_app_mysql_associations : (
-        length(v.username) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.spring_cloud_app_mysql_associations : (
-        length(v.password) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_spring_cloud_app_mysql_association's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -60,5 +36,14 @@ EOT
   #   source:    [from validate.SpringCloudAppID] err != nil
   # path: mysql_server_id
   #   source:    validation.Any(...) - no translation rule yet, add one
+  # path: database_name
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: username
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: password
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
